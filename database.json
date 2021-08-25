@@ -1,5 +1,7 @@
-{
-  "name": "Shiori",
-  "age": 30,
-  "email": "shiori@gmail.com"
+{ 
+  "name": "Sara",
+  "age": 23,
+  "gender": "Female",
+  "department": "History",
+  "car": "Honda"
 }
