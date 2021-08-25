@@ -73,16 +73,56 @@ const app = express()
 
 
 app.use(basicAuth({
-  users: { 'admin': 'supersecret' },
-  challenge: true
+  users: { 'admin': 'supersecret', 'shiori': 'pass' },
+  // challenge: true
+  unauthorizedResponse: () => {
+    console.log('I am here in basicAuth config. Unauthorized!!')
+    const admin ={
+      _username: 'shiori',
+      _password: 'pass'
+    }
+    const userMatches = basicAuth.safeCompare(username, admin._username)
+    const passwordMatches = basicAuth.safeCompare(password, admin._password)
+    if(userMatches && passwordMatches) {
+      // both match
+      console.log('#2 both username and password match', userMatches, passwordMatches)
+      return userMatches & passwordMatches
+    }
+  }
 }))
 
-app.get('/', (req, res) => {
-  res.send('authorized')
+// after authorized, send login data to the server
+
+app.put('/api/login', (req,res,net) => {
+  // create input data object
+  let param = {
+    username: req.body.username,
+    password: req.body.password
+  }
+
+  console.log('#1 req.body is ', param)
+
+  // Check if the login user is okay to be authorized
+  if (param.username === 'shiori' && param.password === 'pass') {
+    res.send({
+      mes: 'SUCCESS',
+      username: param.username,
+      password: param.password
+    })
+  }
 })
 
-app.get('/version', (req,res,net) => {
-  res.send('1. 0. 0')
-})
+// app.get('/', (req, res) => {
+//   res.send('authorized')
+// })
+
+// app.get('/version', (req,res,net) => {
+//   res.send('1. 0. 0')
+// })
+
+// app.post('/givemesomething', (req,res,net) => {
+//   console.log(req)
+//   res.send(`I got: ${JSON.stringify(req.body)}`);
+// })
 
 app.listen(3000, () => console.log('server started'))
