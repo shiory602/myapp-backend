@@ -64,12 +64,22 @@ class SimpleCrudDB {
   create(username, password) {
     // add code to store a record in your database
     // return true if success, false if not
+    db.loginUser.insert({ name: username, password: password})
+    if (err) throw err
+    else {
+      return true
+    }
   }
 
 
   Read(username) {
     // add code to read record from database
       // return undefined if no record exists, otherwise, return the record
+    db.loginUser.find({name: username})
+    if (err) throw err
+    else {
+      return true
+    }
   }
 
 
@@ -77,43 +87,49 @@ class SimpleCrudDB {
 
   Update(username, newRecordData) {
     // add code to update a record in the database
-
-
     // return true if success, false if not
-
-
+    db.loginUser.update({name:username},{$set:{password:newRecordData}})
+    if (err) throw err
+    else {
+      return true
+    }
   };
 
 
   Delete(username)
   {
   // add code to delete a user in the database
-
-
   // return true if success, false if not
-
-
+  db.loginUser.remove({name:username})
+  if (err) throw err
+  else {
+    return true
+  }
   };
 
 
   flushDB() {
-      // flush the inmemoryDatabase to disk (ie: save the database to disk)
-      fs.writeFile('your db path', JSON.stringify(this.inMemoryDatabase) , (err) => {
-        if (err)
-          console.log(err);
-        else {
-          console.log("File written successfully")
-      }})
+    // flush the inmemoryDatabase to disk (ie: save the database to disk)
+    fs.writeFile('your db path', JSON.stringify(this.inMemoryDatabase) , (err) => {
+      if (err)
+        console.log(err);
+      else {
+        console.log("File written successfully")
+    }})
   }
 
 
   reloadDB() {
-      // relead the database from disk
+      // reload the database from disk
+      window.location.reload()
   }
 
 
 }
 let db = new SimpleCrudDB('./db.json')
+
+
+
 
 
 app.use(basicAuth({
